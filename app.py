@@ -1,4 +1,4 @@
-
+                                                                                                    
 from flask import Flask
 from flask_mysqldb import MySQL
 mysql = MySQL()
@@ -8,15 +8,23 @@ app = Flask(__name__)
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'cloud'
 app.config['MYSQL_DB'] = 'studentbook'
-app.config['MYSQL_HOST'] = '35.197.254.77'
+app.config['MYSQL_HOST'] = '35.188.93.187'
 mysql.init_app(app)
 # The first route to access the webservice from http://external-ip:5000/ 
 #@pp.route("/add") this will create a new endpoints that can be accessed using http://external-ip:5000/add
 @app.route("/")
 def hello(): # Name of the method
     cur = mysql.connection.cursor() #create a connection to the SQL instance
+    studentname = input('Enter student name: ')
+    email = input('Enter email: ')
+    cur = mysql.connection.cursor() #create a connection to the SQL instance
+    cur.execute('INSERT INTO students(studentName, email) values(%s, %s)', (studentname, email)) # execute an SQL statment
+    return hello2()
+@app.route("/")
+def hello2(): # Name of the method
+    cur = mysql.connection.cursor() #create a connection to the SQL instance
     cur.execute('''SELECT * FROM students''') # execute an SQL statment
     rv = cur.fetchall() #Retreive all rows returend by the SQL statment
     return str(rv)      #Return the data in a string format
 if __name__ == "__main__":
-        app.run(host='0.0.0.0', port='5000') #Run the flask app at port 5000
+        app.run(host='0.0.0.0', port=5000) #Run the flask app at port 5000
